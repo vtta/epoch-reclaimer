@@ -4,11 +4,6 @@
 #include <atomic>
 #include <cstdint>
 
-#ifdef TEST_BUILD
-#include <glog/logging.h>
-#include <glog/raw_logging.h>
-#endif
-
 #define IS_POWER_OF_TWO(x) (x && (x & (x - 1)) == 0)
 
 inline uint64_t Murmur3_64(uint64_t h) {
@@ -31,20 +26,20 @@ T CompareExchange64(T* destination, T new_value, T comparand) {
 
 namespace very_pm {
 
-static const constexpr bool kUseCLWB = true;
+inline static const constexpr bool kUseCLWB = true;
 
-static const constexpr uint64_t CREATE_MODE_RW = (S_IWUSR | S_IRUSR);
+inline static const constexpr uint64_t CREATE_MODE_RW = (S_IWUSR | S_IRUSR);
 
-static const constexpr uint64_t kPMDK_PADDING = 48;
+inline static const constexpr uint64_t kPMDK_PADDING = 48;
 
-static bool FileExists(const char* pool_path) {
+inline static bool FileExists(const char* pool_path) {
   struct stat buffer;
   return (stat(pool_path, &buffer) == 0);
 }
 
-static const constexpr uint64_t kCacheLineSize = 64;
+inline static const constexpr uint64_t kCacheLineSize = 64;
 
-static void flush(void* addr) {
+inline static void flush(void* addr) {
 #if CASCADE_LAKE == 1
   _mm_clwb(addr);
 #else
@@ -52,7 +47,7 @@ static void flush(void* addr) {
 #endif
 }
 
-static void fence() { _mm_mfence(); }
+inline static void fence() { _mm_mfence(); }
 
 template <typename T>
 T CompareExchange64(T* destination, T new_value, T comparand) {
